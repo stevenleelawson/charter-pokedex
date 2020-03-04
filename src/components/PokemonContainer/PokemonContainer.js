@@ -1,5 +1,6 @@
 import React from 'react';
 import Card from '../Card/Card';
+import './styles.css';
 
 const PokemonContainer = ({ data }) => {
   let pokemon;
@@ -12,7 +13,7 @@ const PokemonContainer = ({ data }) => {
       ))
     }
   return (
-    <div>{ pokemon || 'something broke' }</div>
+    <div className="card-container">{ pokemon || 'something broke' }</div>
   );
 }
 
