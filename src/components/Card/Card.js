@@ -2,7 +2,6 @@ import React from 'react';
 import './styles.css';
 
 const Card = ({ pokemon }) => {
-  console.log('pokemon', pokemon)
   const types = pokemon.type.map(type => (
     <p>{type}</p>
   ));
@@ -21,7 +20,6 @@ const Card = ({ pokemon }) => {
           <h6>Weaknesses:</h6>
           {weaknesses || ""}
         </div>
-        {/* <p>Weaknesses: {weaknesses || ""}</p> */}
       </div>
     </div>
   );

@@ -3,8 +3,6 @@ import Card from '../Card/Card';
 import './styles.css';
 
 import SearchInput, { createFilter } from 'react-search-input';
-import MultipleSelect from "react-multiple-select-dropdown";
-import "react-multiple-select-dropdown/dist/index.css";
 
 const KEYS_TO_FILTERS = ['name'];
 
@@ -15,9 +13,11 @@ class PokemonContainer extends Component {
       searchTerm: "",
       pokemon: [],
       selectedTypeFilter: '',
+      selectedWeaknessFilter: '',
     };
     this.searchUpdated = this.searchUpdated.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.handleChangeType = this.handleChangeType.bind(this);
+    this.handleChangeWeakness = this.handleChangeWeakness.bind(this);
   }
   componentDidMount() {
     const url =
@@ -31,13 +31,16 @@ class PokemonContainer extends Component {
       );
   }
   searchUpdated(term) {
-    console.log('mordor', term)
     this.setState({ searchTerm: term });
   }
-  handleChange(event) {
-    console.log('eventz', event.target.value)
+  handleChangeType(event) {
     this.setState({
       selectedTypeFilter: event.target.value
+    })
+  }
+  handleChangeWeakness(event) {
+    this.setState({
+      selectedWeaknessFilter: event.target.value
     })
   }
   render() {
@@ -51,10 +54,14 @@ class PokemonContainer extends Component {
             acc.push(poke)
           }
         })
+        poke.weaknesses.forEach(type => {
+          if (type === this.state.selectedWeaknessFilter) {
+            acc.push(poke)
+          }
+        })
         return acc;
       },[])
 
-      console.log('typefilt',typeFilteredPokemon)
       let pokemon;
       
       if (this.state.pokemon) {
@@ -65,7 +72,11 @@ class PokemonContainer extends Component {
       ));
     }
 
-      if (this.state.pokemon && this.state.selectedTypeFilter) {
+      if (
+        this.state.pokemon
+        && this.state.selectedTypeFilter
+        || this.state.selectedWeaknessFilter
+        ) {
         pokemon = typeFilteredPokemon.map((pokemon, i) => (
           <div key={pokemon.name + i}>
           <Card pokemon={pokemon} />
@@ -73,30 +84,22 @@ class PokemonContainer extends Component {
       ));
     }
 
-    console.log("poke", pokemon);
-    const typeOptions = [
-      { value: 'Grass', label: 'Grass' },
-      { value: 'Poison', label: 'Poison' },
-      { value: 'Fire', label: 'Fire' },
-      { value: 'Flying', label: 'Flying' },
-      { value: 'Water', label: 'Water' },
-      { value: 'Normal', label: 'Normal' },
-      { value: 'Bug', label: 'Bug' },
-    ]
     return (
       <div>
+        <p>Search by Name:</p>
         <SearchInput className="search-input" onChange={this.searchUpdated} />
         <div className="type-select">
-          <p>Filter by type</p>
-          {/* <MultipleSelect
-            options={typeOptions}
-            selectedOptions={[]}
-            onChange={this.handleChange}
-            defaultValue="click"
-            theme="dark"
-          /> */}
-          <select onChange={this.handleChange}>
+          <p>Filter by type or Weakness</p>
+          <select onChange={this.handleChangeType}>
             <option>Select a Type</option>
+            <option value="Fire">Fire</option>
+            <option value="Water">Water</option>
+            <option value="Grass">Grass</option>
+            <option value="Poison">Poison</option>
+            <option value="Ground">Ground</option>
+          </select>
+          <select onChange={this.handleChangeWeakness}>
+            <option>Select a Weakness</option>
             <option value="Fire">Fire</option>
             <option value="Water">Water</option>
             <option value="Grass">Grass</option>
